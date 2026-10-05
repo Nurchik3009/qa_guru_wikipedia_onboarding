@@ -18,7 +18,6 @@ public class TestBase {
 
     @BeforeAll
     static void beforeAll() {
-        // Считываем параметр deviceHost из командной строки. По умолчанию — browserstack
         String deviceHost = System.getProperty("deviceHost", "browserstack");
 
         if (deviceHost.equalsIgnoreCase("emulation")) {
@@ -46,7 +45,6 @@ public class TestBase {
         Attach.pageSource();
         closeWebDriver();
 
-        // Видео в BrowserStack сохраняется только для облака
         String deviceHost = System.getProperty("deviceHost", "browserstack");
         if (deviceHost.equalsIgnoreCase("browserstack")) {
             Attach.addVideo(sessionId);

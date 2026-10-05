@@ -14,7 +14,6 @@ public class SearchTests extends TestBase {
     void successfulSearchTest() {
 
         step("Открыть приложение Wikipedia", () -> {
-            // приложение открывается в TestBase
         });
 
         step("Нажать на кнопку «Поиск»", () -> {
@@ -35,7 +34,6 @@ public class SearchTests extends TestBase {
     @Test
     void openArticleTest() {
         step("Открыть приложение Wikipedia", () -> {
-            // приложение открывается в TestBase
         });
 
         step("Нажать на кнопку «Поиск»", () -> {
