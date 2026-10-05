@@ -4,6 +4,7 @@ import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.logevents.SelenideLogger;
 import drivers.BrowserstackAndroidDriver;
+import drivers.EmulationDriver;
 import helpers.Attach;
 import io.qameta.allure.selenide.AllureSelenide;
 import org.junit.jupiter.api.AfterEach;
@@ -14,11 +15,21 @@ import static com.codeborne.selenide.Selenide.closeWebDriver;
 import static com.codeborne.selenide.Selenide.open;
 
 public class TestBase {
+
     @BeforeAll
     static void beforeAll() {
-        Configuration.browser = BrowserstackAndroidDriver.class.getName();
+        // Считываем параметр deviceHost из командной строки. По умолчанию — browserstack
+        String deviceHost = System.getProperty("deviceHost", "browserstack");
+
+        if (deviceHost.equalsIgnoreCase("emulation")) {
+            Configuration.browser = EmulationDriver.class.getName();
+        } else {
+            Configuration.browser = BrowserstackAndroidDriver.class.getName();
+        }
+
         Configuration.browserSize = null;
         Configuration.timeout = 30000;
+        Configuration.pageLoadTimeout = -1;
     }
 
     @BeforeEach
@@ -32,10 +43,13 @@ public class TestBase {
         String sessionId = Selenide.sessionId().toString();
         System.out.println(sessionId);
 
-//        Attach.screenshotAs("Last screenshot"); // todo fix
         Attach.pageSource();
         closeWebDriver();
 
-        Attach.addVideo(sessionId);
+        // Видео в BrowserStack сохраняется только для облака
+        String deviceHost = System.getProperty("deviceHost", "browserstack");
+        if (deviceHost.equalsIgnoreCase("browserstack")) {
+            Attach.addVideo(sessionId);
+        }
     }
 }
